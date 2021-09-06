@@ -30,13 +30,13 @@ var getJSON = function(url) {
 };
 
 getJSON('http://localhost:3000/posts').then(function(data) {
-  
+      console.log(data)
       ul.innerHTML = data.map((post) => {
         
         let li = `<li>there is ${post.title} of ${post.author}</li>`;
         console.log(li)
         return li;
-      });
+      }).join('');
       
       postsArea.appendChild(ul);
       
@@ -89,8 +89,9 @@ function decorator(e){
         let li = `<li>there is ${post.title} of ${post.author}</li>`;
 
         return li;
-      });
-      
+      }).join('');
+
+  
       postsArea.appendChild(ul);
       
       console.log('Success ', data);
