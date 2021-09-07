@@ -4,8 +4,30 @@ let button = document.getElementById('addPost');
 let postForm = document.forms.postData;
 let nameInput = postForm.elements.title;
 let authorInput = postForm.elements.author;
+let addName = nameInput.value;
+let addAuthor = authorInput.value;
+let newPost = {};
 
-button.addEventListener('click', decorator);
+
+
+button.addEventListener('click', function decorator(e) {
+  e.preventDefault();
+  newPost={
+    "title" : nameInput.value,
+    "author" : authorInput.value
+  };
+  saveJSON('http://localhost:3000/posts', JSON.stringify(newPost)).then(function(data) {
+
+    let li = document.createElement('li');
+    li.innerHTML = `there is ${newPost.title} of ${newPost.author}`;
+    ul.append(li);
+    console.log('Success ', data);
+    postForm.reset();
+
+  }, function(status) {
+    console.log('Something went wrong.', status);
+  });
+});
 
 var getJSON = function(url) {
   return new Promise(function(resolve, reject) {
@@ -46,15 +68,6 @@ getJSON('http://localhost:3000/posts').then(function(data) {
       
     });
 
-function decorator(e){
-  e.preventDefault();
-  let addName = nameInput.value;
-  let addAuthor = authorInput.value;
-
-  let newPost={
-    "title" : addName,
-    "author" : addAuthor
-  };
 
   function saveJSON (url, data) {
     console.log(nameInput.value + 'author ' + authorInput.value);
@@ -80,31 +93,7 @@ function decorator(e){
     });
   };
 
-  saveJSON('http://localhost:3000/posts', JSON.stringify(newPost)).then(function(data) {
-
-    getJSON('http://localhost:3000/posts').then(function(data) {
-  
-      ul.innerHTML = data.map((post) => {
-        
-        let li = `<li>there is ${post.title} of ${post.author}</li>`;
-
-        return li;
-      }).join('');
 
   
-      postsArea.appendChild(ul);
-      
-      console.log('Success ', data);
-    }, function(status) {
-      console.log('Something went wrong.', status);
-    });
 
-    console.log('Success ', data);
-    postForm.reset();
-
-  }, function(status) {
-    console.log('Something went wrong.', status);
-  });
-
-}
 
